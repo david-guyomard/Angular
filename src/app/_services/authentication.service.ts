@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { User } from '@/_models';
+import { Globals } from '@/app.globals';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
@@ -11,7 +12,7 @@ export class AuthenticationService {
     public currentUser: Observable<User>;
 
     constructor(private http: HttpClient) {
-        this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
+        this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentAuthData')));
         this.currentUser = this.currentUserSubject.asObservable();
     }
 
@@ -19,13 +20,14 @@ export class AuthenticationService {
         return this.currentUserSubject.value;
     }
 
-    login(username: string, password: string) {
-        return this.http.post<any>(`${config.apiUrl}/users/authenticate`, { username, password })
-            .pipe(map(user => {
+    login(login: string, password: string) {
+        return this.http.post<any>(Globals.API_ENDPOINT + `/login`, { login, password })
+            .pipe(map(authResponse => {
                 // login successful if there's a jwt token in the response
-                if (user && user.token) {
+                const user = authResponse.user;
+                if (authResponse && user) {
                     // store user details and jwt token in local storage to keep user logged in between page refreshes
-                    localStorage.setItem('currentUser', JSON.stringify(user));
+                    localStorage.setItem('currentAuthData', JSON.stringify(authResponse));
                     this.currentUserSubject.next(user);
                 }
 
@@ -35,7 +37,7 @@ export class AuthenticationService {
 
     logout() {
         // remove user from local storage to log user out
-        localStorage.removeItem('currentUser');
+        localStorage.removeItem('currentAuthData');
         this.currentUserSubject.next(null);
     }
 }
