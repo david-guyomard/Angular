@@ -1,7 +1,9 @@
-﻿import { NgModule } from '@angular/core';
+﻿import { LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { registerLocaleData } from '@angular/common';
+import localeFr from '@angular/common/locales/fr';
 
 // used to create fake backend
 import { fakeBackendProvider } from './_helpers';
@@ -13,6 +15,8 @@ import { JwtInterceptor, ErrorInterceptor } from './_helpers';
 import { HomeComponent } from './home';
 import { LoginComponent } from './login';
 import { RegisterComponent } from './register';
+
+registerLocaleData(localeFr, 'fr');
 
 @NgModule({
     imports: [
@@ -29,6 +33,7 @@ import { RegisterComponent } from './register';
         RegisterComponent
     ],
     providers: [
+        { provide: LOCALE_ID, useValue: 'fr' },
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
 

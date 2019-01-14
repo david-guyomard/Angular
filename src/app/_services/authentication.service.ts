@@ -12,7 +12,7 @@ export class AuthenticationService {
     public currentUser: Observable<User>;
 
     constructor(private http: HttpClient) {
-        this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentAuthData')));
+        this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
         this.currentUser = this.currentUserSubject.asObservable();
     }
 
@@ -20,14 +20,13 @@ export class AuthenticationService {
         return this.currentUserSubject.value;
     }
 
-    login(login: string, password: string) {
-        return this.http.post<any>(Globals.API_ENDPOINT + `/login`, { login, password })
-            .pipe(map(authResponse => {
+    login(username: string, password: string) {
+        return this.http.post<any>(`${Globals.API_ENDPOINT}/login_check`, { username, password })
+            .pipe(map(user => {
                 // login successful if there's a jwt token in the response
-                const user = authResponse.user;
-                if (authResponse && user) {
+                if (user && user.token) {
                     // store user details and jwt token in local storage to keep user logged in between page refreshes
-                    localStorage.setItem('currentAuthData', JSON.stringify(authResponse));
+                    localStorage.setItem('currentUser', JSON.stringify(user));
                     this.currentUserSubject.next(user);
                 }
 
@@ -37,7 +36,7 @@ export class AuthenticationService {
 
     logout() {
         // remove user from local storage to log user out
-        localStorage.removeItem('currentAuthData');
+        localStorage.removeItem('currentUser');
         this.currentUserSubject.next(null);
     }
 }
