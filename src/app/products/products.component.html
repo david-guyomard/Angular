@@ -1,0 +1,15 @@
+<p>You're logged in with Angular 7!!</p>
+<h3>All registered products:</h3>
+<ul>
+    <li *ngFor="let product of products">
+        {{product.description}}
+        - <a class="text-danger">Delete</a>
+    </li>
+</ul>
+<ul>
+    <li *ngFor="let product of productsTranslated">
+        {{ product | translate:'title' }}
+        {{ product | translate:'description' }}
+        
+    </li>
+</ul>

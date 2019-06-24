@@ -1,7 +1,7 @@
 ﻿import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Globals } from '@/app.globals';
-import { User } from '@/_models';
+import { Globals } from '@@/app.globals';
+import { User } from '@@/_models';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {

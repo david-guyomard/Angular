@@ -6,7 +6,7 @@ import { registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
 
 // used to create fake backend
-import { fakeBackendProvider } from './_helpers';
+import { fakeBackendProvider, TranslatePipe } from './_helpers';
 import { AppComponent } from './app.component';
 import { routing } from './app.routing';
 
@@ -15,6 +15,7 @@ import { JwtInterceptor, ErrorInterceptor } from './_helpers';
 import { HomeComponent } from './home';
 import { LoginComponent } from './login';
 import { RegisterComponent } from './register';
+import { ProductsComponent } from './products';
 
 registerLocaleData(localeFr, 'fr');
 
@@ -30,7 +31,12 @@ registerLocaleData(localeFr, 'fr');
         AlertComponent,
         HomeComponent,
         LoginComponent,
-        RegisterComponent
+        RegisterComponent,
+        ProductsComponent,
+        TranslatePipe
+    ],
+    exports: [
+        TranslatePipe
     ],
     providers: [
         { provide: LOCALE_ID, useValue: 'fr' },
